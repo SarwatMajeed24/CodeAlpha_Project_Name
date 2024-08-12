@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="./logo.jpg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using create-react-app" />
+  <link rel="apple-touch-icon" href="./logo.jpg" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <title>Conference room</title>
+  <style>
+    body { margin: 0; position: relative; }
+    #whiteboard { 
+      border: 1px solid #000; 
+      width: 100vw; 
+      height: 100vh; 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      z-index: 2; /* Ensure the canvas is above other elements */
+      display: none; /* Initially hidden */
+      pointer-events: auto; /* Allows interaction with the canvas */
+    }
+    .controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1; /* Ensure controls are below the whiteboard */
+    }
+    /* Add additional styles for other elements here */
+  </style>
+</head>
+
+<body>
+  
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  <canvas id="whiteboard"></canvas>
+  
+  <!-- Existing controls for screen sharing and mute -->
+  <div class="controls">
+    <button id="toggle-whiteboard">Show Whiteboard</button>
+    <button id="turn-off-whiteboard">Turn Off Whiteboard</button>
+    <!-- Add other existing controls here -->
+  </div>
+
+   
+  <script>
+    const canvas = document.getElementById('whiteboard');
+    const toggleButton = document.getElementById('toggle-whiteboard');
+    const turnOffButton = document.getElementById('turn-off-whiteboard');
+
+    // Function to update the button text based on whiteboard visibility
+    function updateButtonText() {
+      if (canvas.style.display === 'none') {
+        toggleButton.textContent = 'Show Whiteboard';
+      } else {
+        toggleButton.textContent = 'Hide Whiteboard';
+      }
+    }
+
+    // Toggle whiteboard visibility
+    toggleButton.addEventListener('click', () => {
+      if (canvas.style.display === 'none') {
+        canvas.style.display = 'block';
+      } else {
+        canvas.style.display = 'none';
+      }
+      updateButtonText();
+    });
+
+    // Turn off whiteboard
+    turnOffButton.addEventListener('click', () => {
+      canvas.style.display = 'none';
+      updateButtonText();
+    });
+
+    // Initialize button text
+    updateButtonText();
+
+    // Initialize canvas size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Canvas drawing logic
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    function startDrawing(e) {
+      drawing = true;
+      draw(e);
+    }
+
+    function stopDrawing() {
+      drawing = false;
+      ctx.beginPath();
+    }
+
+    function draw(e) {
+      if (!drawing) return;
+      ctx.lineWidth = 5;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#000';
+
+      ctx.lineTo(e.clientX, e.clientY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX, e.clientY);
+    }
+
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mousemove', draw);
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+
+</html>
