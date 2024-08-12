@@ -1,0 +1,15 @@
+{
+  "name": "social-media-website",
+  "version": "1.0.0",
+  "description": "A Responsive Social Media Website With Theme Customization Using HTML CSS &amp; JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.2.0"
+  }
+}
